@@ -8,7 +8,7 @@ var connection = mysql.createConnection({
   host: "localhost",
   port: 3306,
   user: "root",
-  password: "root",
+  password: "hopeisthere",
   database: "employeesDB"
 });
 
@@ -293,8 +293,8 @@ function promptEmployeeRole(employeeChoices, roleChoices) {
     });
 }
 
-// BREAKING CODE UP HERE AGAIN TO TEST NEW FUNCTIONS
-// ALL WORKING AS INTENDED
+
+
 
 function addRole() {
   var query =
@@ -342,7 +342,7 @@ function promptAddRole(departmentChoices) {
       },
     ])
 
-    // may test with this.title and this.salary and this.departmentId, because -this- refers to the object
+  
     .then(function (answer) {
       var query = `INSERT INTO role SET ?`
 
