@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "inquirer": "^9.1.4"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "module-12-sql-challenge-employee-tracker",
+  "description": "Employee-Tracker",
+  "version": "1.0.0",
+  "main": "server.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jerontai-Mcfee/Module-12-SQL-Challenge-Employee-Tracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jerontai-Mcfee/Module-12-SQL-Challenge-Employee-Tracker/issues"
+  },
+  "homepage": "https://github.com/Jerontai-Mcfee/Module-12-SQL-Challenge-Employee-Tracker#readme"
+}
