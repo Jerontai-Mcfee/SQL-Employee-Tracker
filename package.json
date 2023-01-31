@@ -1,13 +1,16 @@
-{
-  "dependencies": {
-    "inquirer": "^9.1.4"
-  },
-  "scripts": {
-    "start": "node server.js"
-  },
-  "name": "module-12-sql-challenge-employee-tracker",
+{ "name": "module-12-sql-challenge-employee-tracker",
   "description": "Employee-Tracker",
   "version": "1.0.0",
+  "dependencies": {
+    "console.table": "^0.10.0",
+      "inquirer": "^7.3.3",
+      "mysql": "^2.18.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+
   "main": "server.js",
   "devDependencies": {},
   "repository": {

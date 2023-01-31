@@ -2,20 +2,26 @@ const inquirer = require("inquirer");
 const mysql = require("mysql");
 require("console.table");
 
-let connection = mysql.createConnection({
-    host: "localhost",
-    port: 3001,
-    user: "jay",
-    password: "hope",
-    database: "employeesDB"
-  });
 
-  connection.connect(function (err) {
+// could use .env file to hide password/username with .gitignore but probably won't bother this time
+var connection = mysql.createConnection({
+  host: "localhost",
+  port: 3306,
+  user: "root",
+  password: "root",
+  database: "employeesDB"
+});
+
+
+// connects to sql server + database
+connection.connect(function (err) {
     if (err) console.error("Could not connect to Database");
     starterPrompt();
   });
 
-  function starterPrompt() {
+  // function which prompts the user for what action they should take
+  // ALL FUNCTIONS ADDED AFTER THIS WILL BE CALLED BASE ON THE USER'S CHOICE. This is the HEART of the application
+function starterPrompt() {
     inquirer.prompt({
         type: "list",
         name: "task",
@@ -30,7 +36,7 @@ let connection = mysql.createConnection({
           "End"]
       })
 
-//   functions to Manage employees
+// ALL FUNCTIONS ADDED AFTER THIS WILL BE CALLED BASE ON THE USER'S CHOICE. This is the HEART of the application
       .then(function ({ task }) {
         switch (task) {
           case "View Employees":
@@ -41,6 +47,7 @@ let connection = mysql.createConnection({
             addEmployee();
             break;
 
+          // Satisfies 1 of the bonuses, could probably add cases & functions to remove departments/roles with a bit more time
           case "Remove Employees":
             removeEmployees();
             break;
@@ -108,7 +115,6 @@ function addEmployee() {
     });
 }
 
-
 // data returned from this function gets passed through addEmployee function
 function promptInsert(roleChoices) {
     inquirer.prompt([
@@ -152,6 +158,7 @@ function promptInsert(roleChoices) {
       });
 }
 
+
 function removeEmployees() {
     console.log("Remove employee");
   
@@ -162,7 +169,7 @@ function removeEmployees() {
     connection.query(query, function (err, res) {
       if (err) console.error("removeEmployees function error");
 
-    
+    //  again be careful of SQL injection when using backticks. might be able to use .env file? may look into for future projects
       const deleteEmployees = res.map(({ id, first_name, last_name }) => ({
         value: id, name: `${id} ${first_name} ${last_name}`
       }));
@@ -171,5 +178,186 @@ function removeEmployees() {
       console.log("Employee removed.\n");
   
       promptDelete(deleteEmployees);
+    });
+}
+
+// BREAKING HERE TO TEST SOME FUNCTIONALITY BEFORE MOVING ON
+// ADDING EMPLOYEE WORKS
+// CONSOLE LOGS APPEAR PROPERLY
+
+
+// will ask User which employee to delete when called inside of removeEmployees() function
+function promptDelete(deleteEmployees) {
+  inquirer.prompt([
+      {
+        type: "list",
+        name: "employeeId",
+        message: "Which employee would you like to remove?",
+        choices: deleteEmployees
+      }
+    ])
+
+    .then(function (answer) {
+      var query = `DELETE FROM employee WHERE ?`;
+      connection.query(query, { id: answer.employeeId }, function (err, res) {
+        if (err) console.error("Error Deleting Employee");
+        console.table(res);
+        console.log(res.affectedRows + "Deleted\n");
+        starterPrompt();
+      });
+    });
+}
+
+
+function employeeArray() {
+  console.log("Updating employee");
+  var query =
+    `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager
+  FROM employee e
+  JOIN role r
+	ON e.role_id = r.id
+  JOIN department d
+  ON d.id = r.department_id
+  JOIN employee m
+	ON m.id = e.manager_id`
+
+  connection.query(query, function (err, res) {
+    if (err) console.error("Error updating employee role");
+    const employeeChoices = res.map(({ id, first_name, last_name }) => ({
+      value: id, name: `${first_name} ${last_name}`      
+    }));
+    
+    console.table(res);
+    console.log("Employee updated\n")
+    roleArray(employeeChoices);
+  });
+}
+
+function updateEmployeeRole() { 
+  employeeArray();
+}
+
+
+function roleArray(employeeChoices) {
+  console.log("Update employee role");
+  var query =
+    `SELECT r.id, r.title, r.salary 
+  FROM role r`
+
+  let roleChoices;
+
+  connection.query(query, function (err, res) {
+    if (err) console.error("roleArray error");
+    roleChoices = res.map(({ id, title, salary }) => ({
+      value: id, title: `${title}`, salary: `${salary}`      
+    }));
+
+    console.table(res);
+    console.log("Role updated\n")
+    promptEmployeeRole(employeeChoices, roleChoices);
+  });
+}
+
+
+// will prompt Employee Role to be updated/set when called in roleArray function
+function promptEmployeeRole(employeeChoices, roleChoices) {
+  inquirer.prompt([
+      {
+        type: "list",
+        name: "employeeId",
+        message: "Which employee do you want to set with this role?",
+        choices: employeeChoices
+      },
+      {
+        type: "list",
+        name: "roleId",
+        message: "Which role would you like to update?",
+        choices: roleChoices
+      },
+    ])
+    .then(function (answer) {
+      var query = `UPDATE employee SET role_id = ? WHERE id = ?`
+      // when finished prompting insert a new item into employeesDB
+      connection.query(query,
+        [ answer.roleId,  
+          answer.employeeId
+        ],
+        function (err, res) {
+          if (err) console.error("promptEmployeeRole function error");
+
+          console.table(res);
+          console.log(res.affectedRows + "Updated");
+
+          starterPrompt();
+        });
+    });
+}
+
+// BREAKING CODE UP HERE AGAIN TO TEST NEW FUNCTIONS
+// ALL WORKING AS INTENDED
+
+function addRole() {
+  var query =
+    `SELECT d.id, d.name, r.salary AS budget
+    FROM employee e
+    JOIN role r
+    ON e.role_id = r.id
+    JOIN department d
+    ON d.id = r.department_id
+    GROUP BY d.id, d.name`
+
+  connection.query(query, function (err, res) {
+    if (err) console.error("addRole function error");
+
+    const departmentChoices = res.map(({ id, name }) => ({
+      value: id, name: `${id} ${name}`
+    }));
+
+    console.table(res);
+    console.log("Role added");
+
+    promptAddRole(departmentChoices);
+  });
+}
+
+
+// will prompt user to add role when called inside the addRole() function
+function promptAddRole(departmentChoices) {
+  inquirer.prompt([
+      {
+        type: "input",
+        name: "roleTitle",
+        message: "Role title: "
+      },
+      {
+        type: "input",
+        name: "roleSalary",
+        message: "Role salary: "
+      },
+      {
+        type: "list",
+        name: "departmentId",
+        message: "Department: ",
+        choices: departmentChoices
+      },
+    ])
+
+    // may test with this.title and this.salary and this.departmentId, because -this- refers to the object
+    .then(function (answer) {
+      var query = `INSERT INTO role SET ?`
+
+      connection.query(query, {
+        title: answer.title,
+        salary: answer.salary,
+        department_id: answer.departmentId
+      },
+        function (err, res) {
+          if (err) console.error("promptAddRole function error");
+
+          console.table(res);
+          console.log("Role Inserted");
+
+          starterPrompt();
+        });
     });
 }

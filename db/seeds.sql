@@ -25,7 +25,7 @@ VALUES ("Frontend Asst Manager", 35000, 4);
 INSERT INTO role (title, salary, department_id)
 VALUES ("Frontend Manager", 60000, 4);
 
--- used names from Mockup, except Kunal Singh (no account manager)
+-- used names from favorite movie characters
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ("Jason", "Borne", 4, 3);
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
