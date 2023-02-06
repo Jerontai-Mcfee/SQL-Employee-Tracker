@@ -49,7 +49,7 @@ THEN I exit the application, and the HTML is generated
 ***
 ###### [Back to Table of Contents](#Table-of-Contents)
 The following images show the web application's appearance:
-![Webpage after updated team](./assets/images/mod 12 screenshot 2.png)
+![Webpage after updated team](/assets/images/mod%2012%20screenshot%202.png)
 
 
 
