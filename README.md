@@ -60,7 +60,8 @@ https://drive.google.com/file/d/1dR__yVHu6dWdBTdQ-js_acHzhsZAolxA/view
 ## License
 ***
 ###### [Back to Table of Contents](#Table-of-Contents)
-MIT
+
+![Badge](https://img.shields.io/badge/License-MIT-brightgreen?style=for-the-badge&logo=appveyor)
 
 
 ###### [Back to Table of Contents](#Table-of-Contents)

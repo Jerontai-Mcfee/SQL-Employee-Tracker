@@ -1,1 +1,20 @@
-{"name":"module-12-sql-challenge-employee-tracker","description":"Employee-Tracker","version":"1.0.0","dependencies":{"console.table":"^0.10.0","inquirer":"^7.3.3","mysql":"^2.18.1","nodemon":"^2.0.20"},"scripts":{"test":"echo \"Error: no test specified\" && exit 1","start":"node server.js"},"main":"server.js","repository":{"type":"git","url":"git+https://github.com/Jerontai-Mcfee/Module-12-SQL-Challenge-Employee-Tracker.git"},"author":"","license":"ISC","bugs":{"url":"https://github.com/Jerontai-Mcfee/Module-12-SQL-Challenge-Employee-Tracker/issues"},"homepage":"https://github.com/Jerontai-Mcfee/Module-12-SQL-Challenge-Employee-Tracker#readme"}
+{
+"name":"module-12-sql-challenge-employee-tracker",
+"description":"Employee-Tracker","version":"1.0.0",
+"dependencies":
+{
+"console.table":"^0.10.0",
+"inquirer":"^7.3.3",
+"mysql2":"^3.1.2",
+"nodemon":"^2.0.20"
+},
+"scripts":{"test":"echo \"Error: no test specified\" && exit 1",
+"start":"node server.js"
+},
+"main":"server.js",
+"repository":{"type":"git","url":"git+https://github.com/Jerontai-Mcfee/Module-12-SQL-Challenge-Employee-Tracker.git"},
+"author":"",
+"license":"ISC"
+,"bugs":{"url":"https://github.com/Jerontai-Mcfee/Module-12-SQL-Challenge-Employee-Tracker/issues"},
+"homepage":"https://github.com/Jerontai-Mcfee/Module-12-SQL-Challenge-Employee-Tracker#readme"
+}

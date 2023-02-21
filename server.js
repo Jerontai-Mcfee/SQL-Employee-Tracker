@@ -1,5 +1,5 @@
 const inquirer = require("inquirer");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 require("console.table");
 
 
@@ -75,11 +75,11 @@ function viewEmployee() {
       `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager
     FROM employee e
     LEFT JOIN role r
-      ON e.role_id = r.id
+    ON e.role_id = r.id
     LEFT JOIN department d
     ON d.id = r.department_id
     LEFT JOIN employee m
-      ON m.id = e.manager_id`
+    ON m.id = e.manager_id`
   
     connection.query(query, function (err, res) {
       if (err) console.error("viewEmployee function error");
@@ -289,13 +289,15 @@ function promptEmployeeRole(employeeChoices, roleChoices) {
           console.log(res.affectedRows + "Updated");
 
           starterPrompt();
-        });
+        });6
     });
 }
 
 
 
 
+// This function retrieves data about departments, including their id, name, and budget
+// It then maps this data into a list of department choices for the user to select from when adding a new role
 function addRole() {
   var query =
     `SELECT d.id, d.name, r.salary AS budget
@@ -306,23 +308,27 @@ function addRole() {
     ON d.id = r.department_id
     GROUP BY d.id, d.name`
 
+  // Execute the SQL query to retrieve department data
+  // The callback function will handle the query results and map them into department choices
   connection.query(query, function (err, res) {
     if (err) console.error("addRole function error");
 
+    // Map the department data into a list of choices for the inquirer prompt
     const departmentChoices = res.map(({ id, name }) => ({
       value: id, name: `${id} ${name}`
     }));
 
+    // Print the department data in a table to the console
     console.table(res);
-    console.log("Role added");
 
+    // Prompt the user to add a new role and pass the list of department choices as an argument
     promptAddRole(departmentChoices);
   });
 }
 
-
-// will prompt user to add role when called inside the addRole() function
+// This function prompts the user to add a new role and inserts it into the database
 function promptAddRole(departmentChoices) {
+  // Use inquirer to prompt the user to enter the new role title, salary, and department
   inquirer.prompt([
       {
         type: "input",
@@ -341,11 +347,11 @@ function promptAddRole(departmentChoices) {
         choices: departmentChoices
       },
     ])
-
-  
     .then(function (answer) {
       var query = `INSERT INTO role SET ?`
 
+      // Execute the SQL query to insert the new role into the database
+      // The callback function will print the results to the console and prompt the user to select another action
       connection.query(query, {
         title: answer.title,
         salary: answer.salary,
@@ -357,7 +363,49 @@ function promptAddRole(departmentChoices) {
           console.table(res);
           console.log("Role Inserted");
 
+          // Prompt the user to select another action
           starterPrompt();
         });
     });
+}
+
+// will prompt user to add role when called inside the addRole() function
+function promptAddRole(departmentChoices) {
+  inquirer.prompt([
+    {
+      type: "input",
+      name: "title",
+      message: "Role title: "
+    },
+    {
+      type: "input",
+      name: "salary",
+      message: "Role salary: "
+    },
+    {
+      type: "list",
+      name: "departmentId",
+      message: "Department: ",
+      choices: departmentChoices
+    },
+  ])
+
+  .then(function (answer) {
+    var query = `INSERT INTO role SET ?`;
+
+    connection.query(query, {
+        title: answer.title,
+        salary: answer.salary,
+        department_id: answer.departmentId
+      },
+      function (err, res) {
+        if (err) console.error("promptAddRole function error");
+
+        console.table(res);
+        console.log("Role Inserted");
+
+        starterPrompt();
+      }
+    );
+  });
 }
