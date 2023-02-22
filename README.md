@@ -55,7 +55,7 @@ The following images show the web application's appearance:
 
 ## Recorded Video
 ***
-https://drive.google.com/file/d/1dR__yVHu6dWdBTdQ-js_acHzhsZAolxA/view
+https://drive.google.com/file/d/1HpwHP0FoPxfxBUsEZwm5qNdxhiIV6kKG/view?usp=share_link
 
 ## License
 ***
