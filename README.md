@@ -1,4 +1,4 @@
-# Module-12-SQL-Challenge-Employee-Tracker
+# SQL-EMPLOYEE-TRACKER
 Employee-Tracker
 
 6## Table of Contents
